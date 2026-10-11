@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useGymStore } from '../store/useGymStore';
+import React, { useState, useMemo } from 'react';
+import { useGymStore, allBuiltinExercises } from '../store/useGymStore';
 import {
   Shield,
   Dumbbell,
@@ -14,8 +14,13 @@ import {
   Flame,
   User,
   Zap,
+  Calendar,
+  Utensils,
+  Layers,
+  ChevronRight,
 } from 'lucide-react';
 import type { OnboardingAnswers, CoachPersonality } from '../types';
+import { generateCustomPlan } from '../utils/planGenerator';
 
 export const OnboardingModal: React.FC = () => {
   const { showOnboarding, completeOnboarding, dismissOnboarding } = useGymStore();
@@ -28,13 +33,20 @@ export const OnboardingModal: React.FC = () => {
     focus: 'glute_waist',
     experience: 'intermediate',
     equipment: 'full_gym',
+    frequency: 4,
+    workoutTime: '07:30',
     fasting: '16_8',
     personality: 'aurelia',
   });
 
-  if (!showOnboarding) return null;
+  const totalSteps = 7;
 
-  const totalSteps = 4;
+  // Compute preview plan dynamically based on current answers
+  const computedPlan = useMemo(() => {
+    return generateCustomPlan(answers, allBuiltinExercises);
+  }, [answers]);
+
+  if (!showOnboarding) return null;
 
   const handleGenderSelect = (gender: 'male' | 'female') => {
     setAnswers({
@@ -45,6 +57,7 @@ export const OnboardingModal: React.FC = () => {
       focus: gender === 'female' ? 'glute_waist' : 'combat',
       personality: gender === 'female' ? 'aurelia' : 'marine',
       fasting: gender === 'female' ? '16_8' : 'omad',
+      workoutTime: gender === 'female' ? '07:30' : '06:00',
     });
   };
 
@@ -73,9 +86,11 @@ export const OnboardingModal: React.FC = () => {
             </div>
             <div>
               <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest block font-mono">
-                STOIC BODY · ONBOARDING
+                STOIC BODY · PROTOCOL ASSESSMENT
               </span>
-              <h3 className="text-base font-black text-white">Create Your Athlete Sanctuary</h3>
+              <h3 className="text-base font-black text-white">
+                {step === 7 ? 'Protocol Computation Complete' : 'Forge Your Athlete Sanctuary'}
+              </h3>
             </div>
           </div>
 
@@ -176,15 +191,15 @@ export const OnboardingModal: React.FC = () => {
             </div>
           )}
 
-          {/* STEP 2: Profile Name & Callsign & Focus */}
+          {/* STEP 2: Athlete Name & Experience */}
           {step === 2 && (
             <div className="space-y-4">
               <div>
                 <h4 className="text-xl font-black text-white tracking-tight">
-                  Set up your athlete identity
+                  Set up your athlete identity & lifting experience
                 </h4>
                 <p className="text-xs text-neutral-400 mt-1">
-                  How your profile and dashboard will address you.
+                  How your profile and dashboard will address you, plus volume calibration.
                 </p>
               </div>
 
@@ -218,100 +233,13 @@ export const OnboardingModal: React.FC = () => {
 
               <div className="pt-2">
                 <label className="text-xs font-bold text-neutral-300 block mb-2">
-                  Primary Physical Focus
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {(isFemale
-                    ? [
-                        {
-                          id: 'glute_waist' as const,
-                          title: 'Glute Hypertrophy & Waist Sculpt',
-                          desc: 'Hip thrusts, RDLs, split squats & posterior chain focus',
-                        },
-                        {
-                          id: 'pilates_tone' as const,
-                          title: 'Lean Toning & Core Posture',
-                          desc: 'Full body definition, pelvic floor stability & alignment',
-                        },
-                        {
-                          id: 'athletic' as const,
-                          title: 'Metabolic Conditioning & HIIT',
-                          desc: 'Cardiovascular endurance, stamina & functional athleticism',
-                        },
-                        {
-                          id: 'strength' as const,
-                          title: 'Compound Iron Strength',
-                          desc: 'Squat, deadlift, overhead barbell & progressive overload',
-                        },
-                      ]
-                    : [
-                        {
-                          id: 'combat' as const,
-                          title: 'USMC Combat Conditioning',
-                          desc: 'Readiness, stamina, tactical pull-ups, push & grit',
-                        },
-                        {
-                          id: 'hypertrophy' as const,
-                          title: 'Muscle Hypertrophy & Density',
-                          desc: 'Aesthetic shape, volume overload & high time-under-tension',
-                        },
-                        {
-                          id: 'strength' as const,
-                          title: 'Raw Iron Strength & 1RM',
-                          desc: 'Squat, bench, deadlift, overhead power & compound focus',
-                        },
-                        {
-                          id: 'athletic' as const,
-                          title: 'Lean Athletic Engine',
-                          desc: 'Conditioning intervals, boxing bags & functional mobility',
-                        },
-                      ]
-                  ).map((f) => {
-                    const isSelected = answers.focus === f.id;
-                    return (
-                      <div
-                        key={f.id}
-                        onClick={() => setAnswers({ ...answers, focus: f.id })}
-                        className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between active:scale-98 ${
-                          isSelected
-                            ? 'bg-[#221C20] border-[#E0A899] text-white shadow'
-                            : 'bg-[#121012] border-[#242024] hover:border-[#383036] text-neutral-300'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-bold text-xs text-white">{f.title}</span>
-                          {isSelected && <Check className="w-3.5 h-3.5 text-[#E0A899] stroke-[3]" />}
-                        </div>
-                        <p className="text-[11px] text-neutral-400">{f.desc}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3: Experience & Equipment */}
-          {step === 3 && (
-            <div className="space-y-4">
-              <div>
-                <h4 className="text-xl font-black text-white tracking-tight">
-                  Your experience & equipment access
-                </h4>
-                <p className="text-xs text-neutral-400 mt-1">
-                  Calibrates volume, warm-up stages, and rest interval timers.
-                </p>
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-neutral-300 block mb-2">
-                  Lifting Experience
+                  Lifting Experience (Volume & Rest Calibration)
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { id: 'recruit' as const, label: 'Recruit', sub: '< 1 Year' },
-                    { id: 'intermediate' as const, label: 'Dedicated', sub: '1-3 Years' },
-                    { id: 'veteran' as const, label: 'Advanced', sub: '3+ Years' },
+                    { id: 'recruit' as const, label: 'Recruit', sub: '< 1 Year · 3 Sets' },
+                    { id: 'intermediate' as const, label: 'Dedicated', sub: '1-3 Years · 3-4 Sets' },
+                    { id: 'veteran' as const, label: 'Advanced', sub: '3+ Years · 4 Sets' },
                   ].map((lvl) => (
                     <button
                       key={lvl.id}
@@ -329,41 +257,219 @@ export const OnboardingModal: React.FC = () => {
                   ))}
                 </div>
               </div>
+            </div>
+          )}
 
-              <div className="pt-2">
-                <label className="text-xs font-bold text-neutral-300 block mb-2">
-                  Primary Equipment Setup
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {[
-                    { id: 'full_gym' as const, title: 'Full Commercial Gym', desc: 'Barbells, dumbbells, cable stacks & machines' },
-                    { id: 'barbell_home' as const, title: 'Iron Home Gym', desc: 'Power rack, Olympic barbell, plates & bench' },
-                    { id: 'dumbbells' as const, title: 'Dumbbells & Bench', desc: 'Adjustable dumbbells, bands & flat bench' },
-                    { id: 'bodyweight' as const, title: 'Bodyweight & Mobility', desc: 'Calisthenics, pull-up bar, mats & bands' },
-                  ].map((eq) => (
+          {/* STEP 3: Primary Physical Focus & Target Goal */}
+          {step === 3 && (
+            <div className="space-y-4">
+              <div>
+                <h4 className="text-xl font-black text-white tracking-tight">
+                  Primary physical focus & target adaptation
+                </h4>
+                <p className="text-xs text-neutral-400 mt-1">
+                  Determines exercise selection, muscle emphasis, and split sequencing.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {(isFemale
+                  ? [
+                      {
+                        id: 'glute_waist' as const,
+                        title: 'Glute Hypertrophy & Waist Sculpt',
+                        desc: 'Hip thrusts, RDLs, split squats & hourglass V-taper delts',
+                      },
+                      {
+                        id: 'pilates_tone' as const,
+                        title: 'Lean Toning & Core Posture',
+                        desc: 'Full body definition, pelvic floor stability & alignment',
+                      },
+                      {
+                        id: 'athletic' as const,
+                        title: 'Metabolic Conditioning & HIIT',
+                        desc: 'Cardiovascular stamina, intervals & functional athleticism',
+                      },
+                      {
+                        id: 'strength' as const,
+                        title: 'Compound Iron Strength',
+                        desc: 'Squat, deadlift, overhead barbell & progressive overload',
+                      },
+                    ]
+                  : [
+                      {
+                        id: 'combat' as const,
+                        title: 'USMC Combat Conditioning',
+                        desc: 'Tactical readiness, strict pull-ups, push & heavy deadlifts',
+                      },
+                      {
+                        id: 'hypertrophy' as const,
+                        title: 'Muscle Hypertrophy & Density',
+                        desc: 'Aesthetic shape, volume overload & high time-under-tension',
+                      },
+                      {
+                        id: 'strength' as const,
+                        title: 'Raw Iron Strength & 1RM',
+                        desc: 'Squat, bench, deadlift, overhead power & compound focus',
+                      },
+                      {
+                        id: 'athletic' as const,
+                        title: 'Lean Athletic Engine',
+                        desc: 'Conditioning intervals, boxing bags & functional mobility',
+                      },
+                    ]
+                ).map((f) => {
+                  const isSelected = answers.focus === f.id;
+                  return (
                     <div
-                      key={eq.id}
-                      onClick={() => setAnswers({ ...answers, equipment: eq.id })}
-                      className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
-                        answers.equipment === eq.id
-                          ? 'bg-[#261E22] border-[#E0A899] text-white shadow'
+                      key={f.id}
+                      onClick={() => setAnswers({ ...answers, focus: f.id })}
+                      className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between active:scale-98 ${
+                        isSelected
+                          ? 'bg-[#221C20] border-[#E0A899] text-white shadow'
                           : 'bg-[#121012] border-[#242024] hover:border-[#383036] text-neutral-300'
                       }`}
                     >
-                      <div>
-                        <div className="font-bold text-xs text-white">{eq.title}</div>
-                        <div className="text-[10px] text-neutral-400 mt-0.5">{eq.desc}</div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-bold text-xs text-white">{f.title}</span>
+                        {isSelected && <Check className="w-3.5 h-3.5 text-[#E0A899] stroke-[3]" />}
                       </div>
-                      {answers.equipment === eq.id && <Check className="w-4 h-4 text-[#E0A899] stroke-[3]" />}
+                      <p className="text-[11px] text-neutral-400">{f.desc}</p>
                     </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* STEP 4: Equipment Access */}
+          {step === 4 && (
+            <div className="space-y-4">
+              <div>
+                <h4 className="text-xl font-black text-white tracking-tight">
+                  Your equipment access & training environment
+                </h4>
+                <p className="text-xs text-neutral-400 mt-1">
+                  Filters exercises so your routines only include movements you can actually perform.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {[
+                  {
+                    id: 'full_gym' as const,
+                    title: 'Full Commercial Gym',
+                    desc: 'Barbells, dumbbells, cable stacks, machines & pull-up bars',
+                  },
+                  {
+                    id: 'barbell_home' as const,
+                    title: 'Iron Home Gym',
+                    desc: 'Power rack, Olympic barbell, weight plates & adjustable bench',
+                  },
+                  {
+                    id: 'dumbbells' as const,
+                    title: 'Dumbbells & Bench',
+                    desc: 'Adjustable dumbbells, flat/incline bench & resistance bands',
+                  },
+                  {
+                    id: 'bodyweight' as const,
+                    title: 'Bodyweight & Mobility',
+                    desc: 'Zero kit needed: calisthenics, floor mat, bands & pull-up bar',
+                  },
+                ].map((eq) => (
+                  <div
+                    key={eq.id}
+                    onClick={() => setAnswers({ ...answers, equipment: eq.id })}
+                    className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                      answers.equipment === eq.id
+                        ? 'bg-[#261E22] border-[#E0A899] text-white shadow'
+                        : 'bg-[#121012] border-[#242024] hover:border-[#383036] text-neutral-300'
+                    }`}
+                  >
+                    <div>
+                      <div className="font-bold text-xs text-white">{eq.title}</div>
+                      <div className="text-[10px] text-neutral-400 mt-0.5">{eq.desc}</div>
+                    </div>
+                    {answers.equipment === eq.id && <Check className="w-4 h-4 text-[#E0A899] stroke-[3]" />}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* STEP 5: Training Frequency & Preferred Time */}
+          {step === 5 && (
+            <div className="space-y-4">
+              <div>
+                <h4 className="text-xl font-black text-white tracking-tight">
+                  Training frequency & preferred workout time
+                </h4>
+                <p className="text-xs text-neutral-400 mt-1">
+                  Populates your weekly schedule and daily calendar timeline.
+                </p>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-neutral-300 block mb-2">
+                  Training Days Per Week
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {[
+                    { days: 3 as const, label: '3 Days', sub: 'Full Body (M/W/F)' },
+                    { days: 4 as const, label: '4 Days', sub: 'Upper/Lower (M/T/Th/F)' },
+                    { days: 5 as const, label: '5 Days', sub: 'PPL + Upper/Lower' },
+                    { days: 6 as const, label: '6 Days', sub: 'Arnold PPL (Mon-Sat)' },
+                  ].map((freq) => (
+                    <button
+                      key={freq.days}
+                      type="button"
+                      onClick={() => setAnswers({ ...answers, frequency: freq.days })}
+                      className={`p-3 rounded-xl border text-center transition-all ${
+                        answers.frequency === freq.days
+                          ? 'bg-[#261E22] border-[#E0A899] text-white font-bold'
+                          : 'bg-[#121012] border-[#242024] text-neutral-400 hover:text-white'
+                      }`}
+                    >
+                      <div className="text-xs font-black">{freq.label}</div>
+                      <div className="text-[10px] text-neutral-500 font-mono mt-0.5">{freq.sub}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <label className="text-xs font-bold text-neutral-300 block mb-2">
+                  Preferred Daily Workout Time
+                </label>
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                  {[
+                    { time: '06:00', label: '06:00 AM', tag: 'Dawn' },
+                    { time: '07:30', label: '07:30 AM', tag: 'Morning' },
+                    { time: '12:00', label: '12:00 PM', tag: 'Noon' },
+                    { time: '17:30', label: '05:30 PM', tag: 'Post-Work' },
+                    { time: '19:30', label: '07:30 PM', tag: 'Night' },
+                  ].map((t) => (
+                    <button
+                      key={t.time}
+                      type="button"
+                      onClick={() => setAnswers({ ...answers, workoutTime: t.time })}
+                      className={`p-2.5 rounded-xl border text-center transition-all ${
+                        answers.workoutTime === t.time
+                          ? 'bg-[#261E22] border-[#E0A899] text-white font-bold'
+                          : 'bg-[#121012] border-[#242024] text-neutral-400 hover:text-white'
+                      }`}
+                    >
+                      <div className="text-xs font-mono font-bold">{t.label}</div>
+                      <div className="text-[9px] text-neutral-500 uppercase mt-0.5">{t.tag}</div>
+                    </button>
                   ))}
                 </div>
               </div>
             </div>
           )}
 
-          {/* STEP 4: Fasting & Nutrition Protocol */}
-          {step === 4 && (
+          {/* STEP 6: Fasting & Dietary Protocol */}
+          {step === 6 && (
             <div className="space-y-4">
               <div>
                 <h4 className="text-xl font-black text-white tracking-tight">
@@ -379,7 +485,7 @@ export const OnboardingModal: React.FC = () => {
                   {
                     id: '16_8' as const,
                     title: '16:8 Lean Gains Protocol (Recommended for Women)',
-                    desc: '16h Fast / 8h Feeding Window (e.g. 12:00 - 20:00). Ideal for hormonal balance, thyroid health, and muscle retention.',
+                    desc: '16h Fast / 8h Feeding Window (12:00 - 20:00). Ideal for hormonal balance, thyroid health, and muscle retention.',
                     badge: 'OPTIMAL BALANCE',
                   },
                   {
@@ -391,7 +497,7 @@ export const OnboardingModal: React.FC = () => {
                   {
                     id: '20_4' as const,
                     title: '20:4 Warrior Window',
-                    desc: '20h Fast / 4h Feeding Window (e.g. 16:00 - 20:00). High insulin sensitivity with a two-meal refeed.',
+                    desc: '20h Fast / 4h Feeding Window (16:00 - 20:00). High insulin sensitivity with a two-meal refeed.',
                     badge: 'WARRIOR',
                   },
                   {
@@ -434,6 +540,77 @@ export const OnboardingModal: React.FC = () => {
               </div>
             </div>
           )}
+
+          {/* STEP 7: Plan Computation & Generated Protocol Review */}
+          {step === 7 && (
+            <div className="space-y-4">
+              <div className="p-4 rounded-2xl bg-[#1C181B] border border-[#3A2B34] flex items-center gap-3">
+                <Sparkles className="w-6 h-6 text-[#E0A899] flex-shrink-0 fill-current" />
+                <div>
+                  <h4 className="text-base font-black text-white">
+                    {computedPlan.summary.splitName}
+                  </h4>
+                  <p className="text-xs text-neutral-300">
+                    Engineered from all 552 exercises to match your equipment ({computedPlan.summary.equipmentTitle})
+                  </p>
+                </div>
+              </div>
+
+              {/* Generated Routines Preview */}
+              <div>
+                <span className="text-[11px] font-black uppercase text-neutral-400 tracking-wider block mb-2">
+                  Generated Workout Routines ({computedPlan.routines.length})
+                </span>
+                <div className="space-y-2">
+                  {computedPlan.routines.map((r, idx) => (
+                    <div
+                      key={r.id}
+                      className="p-3.5 rounded-2xl bg-[#121112] border border-[#242024] flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-2.5 h-10 rounded-full"
+                          style={{ backgroundColor: r.color }}
+                        />
+                        <div>
+                          <div className="text-xs font-black text-white">{r.name}</div>
+                          <div className="text-[11px] text-neutral-400 font-mono">
+                            {r.exerciseIds.length} Movements · {r.group}
+                          </div>
+                        </div>
+                      </div>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-[#1E1A1E] text-neutral-300 border border-[#2E282E]">
+                        Day {idx + 1}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Weekly Split & Calendar Sync */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3.5 rounded-2xl bg-[#121112] border border-[#242024]">
+                  <div className="flex items-center gap-2 mb-1 text-xs font-bold text-white">
+                    <Calendar className="w-3.5 h-3.5 text-[#E0A899]" />
+                    Calendar Sync
+                  </div>
+                  <p className="text-[11px] text-neutral-400 leading-snug">
+                    14 Days of scheduled workouts at {answers.workoutTime}, morning hydration & fasting windows.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-[#121112] border border-[#242024]">
+                  <div className="flex items-center gap-2 mb-1 text-xs font-bold text-white">
+                    <Utensils className="w-3.5 h-3.5 text-[#8FA377]" />
+                    Nutrition Targets
+                  </div>
+                  <p className="text-[11px] text-neutral-400 leading-snug font-mono">
+                    {computedPlan.nutritionTargets.calories} kcal · {computedPlan.nutritionTargets.protein}g Protein · {(computedPlan.nutritionTargets.waterMl / 1000).toFixed(1)}L Water
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Bottom Actions */}
@@ -472,7 +649,7 @@ export const OnboardingModal: React.FC = () => {
               }}
             >
               <Sparkles className="w-4 h-4 fill-current" />
-              Forge My Protocol & Launch
+              Launch Protocol & Enter Sanctuary
             </button>
           )}
         </div>

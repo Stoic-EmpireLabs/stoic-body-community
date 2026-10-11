@@ -34,6 +34,7 @@ import {
   defaultNutritionTargets,
   getLocalDateString,
 } from '../data/defaultSchedule';
+import { generateCustomPlan } from '../utils/planGenerator';
 
 export const allBuiltinExercises: Exercise[] = allExercisesData as Exercise[];
 
@@ -86,6 +87,7 @@ interface GymState {
   athleteAccounts: AthleteAccount[];
   onboardingDone: boolean;
   showOnboarding: boolean;
+  showLoginModal: boolean;
   onboardingAnswers: OnboardingAnswers | null;
   currentQuote: StoicQuote;
   scheduledEvents: ScheduledEvent[];
@@ -115,35 +117,23 @@ const defaultAthleteAccounts: AthleteAccount[] = [
   },
 ];
 
-const defaultRoutines: Routine[] = [
+const defaultPlan = generateCustomPlan(
   {
-    id: 'routine-glute-sculpt',
-    name: 'Glute & Posterior Chain Sculpt',
-    group: 'Aurelia Starter Plans',
-    color: '#E0A899',
-    exerciseIds: ['barbell-hip-thrust', 'romanian-deadlift', 'bulgarian-split-squat', 'cable-glute-kickback'].filter((id) =>
-      allBuiltinExercises.some((e) => e.id === id)
-    ),
+    gender: 'female',
+    name: 'Sophia',
+    callsign: 'Aurelia',
+    focus: 'glute_waist',
+    experience: 'intermediate',
+    equipment: 'full_gym',
+    frequency: 4,
+    workoutTime: '07:30',
+    fasting: '16_8',
+    personality: 'aurelia',
   },
-  {
-    id: 'routine-upper-posture',
-    name: 'Upper Body & Posture Definition',
-    group: 'Aurelia Starter Plans',
-    color: '#8FA377',
-    exerciseIds: ['lat-pulldown', 'dumbbell-shoulder-press', 'cable-face-pull', 'dumbbell-incline-press'].filter((id) =>
-      allBuiltinExercises.some((e) => e.id === id)
-    ),
-  },
-  {
-    id: 'routine-core-waist',
-    name: 'Core, Pelvic Floor & Stability Flow',
-    group: 'Aurelia Starter Plans',
-    color: '#7FA8C9',
-    exerciseIds: ['plank', 'deadbug', 'hanging-knee-raise', 'cable-woodchopper'].filter((id) =>
-      allBuiltinExercises.some((e) => e.id === id)
-    ),
-  },
-];
+  allBuiltinExercises
+);
+
+const defaultRoutines: Routine[] = defaultPlan.routines;
 
 const defaultState: GymState = {
   route: 'home',
@@ -155,8 +145,8 @@ const defaultState: GymState = {
   activeToolId: null,
   session: null,
   sessions: [],
-  routines: defaultRoutines,
-  weeklyPlan: { 1: defaultRoutines[0]?.id || '', 3: defaultRoutines[1]?.id || '', 5: defaultRoutines[2]?.id || '' },
+  routines: defaultPlan.routines,
+  weeklyPlan: defaultPlan.weeklyPlan,
   favorites: {},
   customExercises: [],
   bodyweight: [],
@@ -197,6 +187,7 @@ const defaultState: GymState = {
   athleteAccounts: defaultAthleteAccounts,
   onboardingDone: false,
   showOnboarding: true,
+  showLoginModal: false,
   onboardingAnswers: {
     gender: 'female',
     name: 'Sophia',
@@ -204,22 +195,15 @@ const defaultState: GymState = {
     focus: 'glute_waist',
     experience: 'intermediate',
     equipment: 'full_gym',
+    frequency: 4,
+    workoutTime: '07:30',
     personality: 'aurelia',
     fasting: '16_8',
   },
   currentQuote: getRandomQuote('aurelia'),
-  scheduledEvents: generateDefaultSchedule(14),
+  scheduledEvents: defaultPlan.scheduledEvents,
   meals: [],
-  nutritionTargets: {
-    calories: 1850,
-    protein: 130,
-    carbs: 180,
-    fat: 55,
-    waterMl: 2800,
-    fastingHours: 16,
-    fastingProtocol: '16_8',
-    fastStartTime: '20:00',
-  },
+  nutritionTargets: defaultPlan.nutritionTargets,
   waterMl: 0,
 };
 
@@ -342,7 +326,7 @@ export function useGymStore() {
   const allExercises = [...allBuiltinExercises, ...globalState.customExercises];
 
   const getExerciseById = (id: string): Exercise | undefined => {
-    return allExercises.find((e) => e.id === id);
+    return allExercises.find((e) => e.id === id || e.art === id);
   };
 
   const toggleFavorite = (exerciseId: string) => {
@@ -1120,6 +1104,16 @@ export function useGymStore() {
     notify();
   };
 
+  const openLoginModal = () => {
+    globalState.showLoginModal = true;
+    notify();
+  };
+
+  const dismissLoginModal = () => {
+    globalState.showLoginModal = false;
+    notify();
+  };
+
   const openOnboarding = () => {
     globalState.showOnboarding = true;
     notify();
@@ -1131,86 +1125,66 @@ export function useGymStore() {
   };
 
   const completeOnboarding = (answers: OnboardingAnswers) => {
+    const plan = generateCustomPlan(answers, allBuiltinExercises);
+
     globalState.onboardingAnswers = answers;
     globalState.onboardingDone = true;
     globalState.showOnboarding = false;
-    globalState.coachPersonality = answers.personality;
-    globalState.settings.coachPersonality = answers.personality;
+    globalState.showLoginModal = false;
+    globalState.coachPersonality = plan.coachPersonality;
+    globalState.settings.coachPersonality = plan.coachPersonality;
     globalState.settings.onboardingCompleted = true;
     globalState.settings.gender = answers.gender;
-    globalState.profile.gender = answers.gender;
-    if (answers.name) globalState.profile.name = answers.name;
-    if (answers.callsign) globalState.profile.callsign = answers.callsign;
+    globalState.settings.heatTone = answers.gender === 'female' ? 'rose' : 'ember';
+    globalState.profile = {
+      ...globalState.profile,
+      ...plan.profileUpdates,
+    };
+    globalState.routines = plan.routines;
+    globalState.weeklyPlan = plan.weeklyPlan;
+    globalState.scheduledEvents = plan.scheduledEvents;
+    globalState.nutritionTargets = plan.nutritionTargets;
+    globalState.currentQuote = getRandomQuote(plan.coachPersonality);
 
-    if (answers.gender === 'female') {
-      globalState.settings.heatTone = 'rose';
-      globalState.profile.bio = 'Empress & Aurelia Discipline · Toned Strength & Poise';
-      globalState.coachPersonality = 'aurelia';
-      globalState.settings.coachPersonality = 'aurelia';
-      globalState.currentQuote = getRandomQuote('aurelia');
+    // Save or update athlete account
+    const athleteId = globalState.activeProfileId || (answers.gender === 'female' ? 'athlete-female' : 'athlete-male');
+    const existingIdx = globalState.athleteAccounts.findIndex((a) => a.id === athleteId);
+    const updatedAccount: AthleteAccount = {
+      id: athleteId,
+      name: answers.name || (answers.gender === 'female' ? 'Sophia' : 'Marcus'),
+      callsign: answers.callsign || (answers.gender === 'female' ? 'Aurelia' : 'Spartan'),
+      role: answers.gender === 'female' ? 'Empress Athlete' : 'Tactical Athlete',
+      personality: plan.coachPersonality,
+      gender: answers.gender,
+      createdDate: new Date().toISOString(),
+    };
 
-      globalState.nutritionTargets = {
-        calories: 1850,
-        protein: 130,
-        carbs: 180,
-        fat: 55,
-        waterMl: 2800,
-        fastingHours: answers.fasting === 'omad' ? 23 : answers.fasting === '20_4' ? 20 : 16,
-        fastingProtocol: answers.fasting || '16_8',
-        fastStartTime: '20:00',
-      };
-
-      globalState.routines = [
-        {
-          id: 'routine-glute-sculpt',
-          name: 'Glute & Posterior Chain Sculpt',
-          group: 'Aurelia Protocols',
-          color: '#E0A899',
-          exerciseIds: ['barbell-hip-thrust', 'romanian-deadlift', 'bulgarian-split-squat', 'cable-glute-kickback'].filter((id) =>
-            allBuiltinExercises.some((e) => e.id === id)
-          ),
-        },
-        {
-          id: 'routine-upper-posture',
-          name: 'Upper Body & Posture Definition',
-          group: 'Aurelia Protocols',
-          color: '#8FA377',
-          exerciseIds: ['lat-pulldown', 'dumbbell-shoulder-press', 'cable-face-pull', 'dumbbell-incline-press'].filter((id) =>
-            allBuiltinExercises.some((e) => e.id === id)
-          ),
-        },
-        {
-          id: 'routine-core-waist',
-          name: 'Core, Pelvic Floor & Stability Flow',
-          group: 'Aurelia Protocols',
-          color: '#7FA8C9',
-          exerciseIds: ['plank', 'deadbug', 'hanging-knee-raise', 'cable-woodchopper'].filter((id) =>
-            allBuiltinExercises.some((e) => e.id === id)
-          ),
-        },
-      ];
-      globalState.weeklyPlan = {
-        1: 'routine-glute-sculpt',
-        3: 'routine-upper-posture',
-        5: 'routine-core-waist',
-      };
+    if (existingIdx >= 0) {
+      globalState.athleteAccounts[existingIdx] = updatedAccount;
     } else {
-      globalState.settings.heatTone = 'ember';
-      globalState.profile.bio = answers.personality === 'marine'
-        ? 'USMC Combat Conditioning · Semper Fidelis · Lift. Log it. Grow.'
-        : 'Stoic Iron Discipline · Sovereignty of Mind & Body';
-      globalState.currentQuote = getRandomQuote(answers.personality);
+      globalState.athleteAccounts = [...globalState.athleteAccounts, updatedAccount];
+    }
+    globalState.activeProfileId = athleteId;
 
-      globalState.nutritionTargets = {
-        calories: 2400,
-        protein: 190,
-        carbs: 220,
-        fat: 65,
-        waterMl: 3500,
-        fastingHours: answers.fasting === 'omad' ? 23 : 16,
-        fastingProtocol: answers.fasting || 'omad',
-        fastStartTime: '19:00',
+    // Snapshot state for this athlete account
+    try {
+      const snapshot = {
+        sessions: globalState.sessions,
+        routines: globalState.routines,
+        weeklyPlan: globalState.weeklyPlan,
+        bodyweight: globalState.bodyweight,
+        measures: globalState.measures,
+        notes: globalState.notes,
+        profile: globalState.profile,
+        settings: globalState.settings,
+        scheduledEvents: globalState.scheduledEvents,
+        meals: globalState.meals,
+        nutritionTargets: globalState.nutritionTargets,
+        waterMl: globalState.waterMl,
       };
+      localStorage.setItem(`stoic_community_athlete_data_${athleteId}`, JSON.stringify(snapshot));
+    } catch (e) {
+      console.error('Failed to snapshot athlete data on onboarding completion:', e);
     }
 
     sound.playCheer(globalState.settings.soundEnabled);
@@ -1575,6 +1549,8 @@ export function useGymStore() {
     setCoachPersonality,
     switchAthlete,
     saveAthlete,
+    openLoginModal,
+    dismissLoginModal,
     openOnboarding,
     dismissOnboarding,
     completeOnboarding,
@@ -1598,4 +1574,20 @@ export function useGymStore() {
 }
 
 useGymStore.getState = () => globalState;
+
+if (typeof window !== 'undefined') {
+  (window as any).gymStore = {
+    getState: () => globalState,
+    setRoute: (r: any) => { globalState.routeStack = []; globalState.route = r; notify(); },
+    pushRoute: (r: any) => { globalState.routeStack.push(globalState.route); globalState.route = r; notify(); },
+    setActiveExerciseId: (id: any) => { globalState.activeExerciseId = id; notify(); },
+    setProfileGender: (g: 'male' | 'female') => {
+      globalState.profile.gender = g;
+      globalState.settings.gender = g;
+      globalState.coachPersonality = g === 'female' ? 'aurelia' : 'marine';
+      globalState.profile.callsign = g === 'female' ? 'Aurelia' : 'Spartan';
+      notify();
+    }
+  };
+}
 
