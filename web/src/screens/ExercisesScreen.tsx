@@ -174,7 +174,13 @@ export const ExercisesScreen: React.FC = () => {
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="w-12 h-12 rounded-xl bg-[#100F0E] overflow-hidden flex items-center justify-center flex-shrink-0 border border-[#201E1C]">
                         {ex.art ? (
-                          <ExerciseArt slug={ex.art} height={48} loop={false} />
+                          <ExerciseArt
+                            slug={ex.art}
+                            height={48}
+                            loop={false}
+                            exerciseName={ex.name}
+                            primaryMuscle={ex.primary}
+                          />
                         ) : (
                           <Dumbbell className="w-5 h-5 text-neutral-600" />
                         )}

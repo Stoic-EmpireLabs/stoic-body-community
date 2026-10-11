@@ -320,7 +320,13 @@ export const SessionScreen: React.FC = () => {
               {/* Vector Art Animation Loop */}
               {fullExerciseDef?.art && (
                 <div className="h-56 rounded-2xl overflow-hidden bg-[#100F0E] flex items-center justify-center p-3 border border-[#22201E]">
-                  <ExerciseArt slug={fullExerciseDef.art} height={200} loop={true} />
+                  <ExerciseArt
+                    slug={fullExerciseDef.art}
+                    height={200}
+                    loop={true}
+                    exerciseName={fullExerciseDef.name}
+                    primaryMuscle={fullExerciseDef.primary}
+                  />
                 </div>
               )}
 

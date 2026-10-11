@@ -602,7 +602,13 @@ export const HomeScreen: React.FC = () => {
               className="bg-[#161514] hover:bg-[#1E1C1A] border border-[#262422] hover:border-[#D9A184]/40 rounded-3xl p-3.5 cursor-pointer transition-all active:scale-98 flex flex-col justify-between shadow-md"
             >
               <div className="h-32 rounded-2xl overflow-hidden bg-[#100F0E] mb-3 flex items-center justify-center p-2">
-                <ExerciseArt slug={ex.art} height={120} loop={false} />
+                <ExerciseArt
+                  slug={ex.art}
+                  height={120}
+                  loop={false}
+                  exerciseName={ex.name}
+                  primaryMuscle={ex.primary}
+                />
               </div>
               <div>
                 <span className="text-[10px] font-extrabold text-[#D9A184] uppercase tracking-wider block">

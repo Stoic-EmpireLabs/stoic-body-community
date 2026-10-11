@@ -98,9 +98,9 @@ const defaultAthleteAccounts: AthleteAccount[] = [
   {
     id: 'athlete-female',
     name: 'Sophia',
-    callsign: 'Athena',
+    callsign: 'Aurelia',
     role: 'Empress / Female Athlete',
-    personality: 'athena',
+    personality: 'aurelia',
     gender: 'female',
     createdDate: new Date().toISOString(),
   },
@@ -119,7 +119,7 @@ const defaultRoutines: Routine[] = [
   {
     id: 'routine-glute-sculpt',
     name: 'Glute & Posterior Chain Sculpt',
-    group: 'Athena Starter Plans',
+    group: 'Aurelia Starter Plans',
     color: '#E0A899',
     exerciseIds: ['barbell-hip-thrust', 'romanian-deadlift', 'bulgarian-split-squat', 'cable-glute-kickback'].filter((id) =>
       allBuiltinExercises.some((e) => e.id === id)
@@ -128,7 +128,7 @@ const defaultRoutines: Routine[] = [
   {
     id: 'routine-upper-posture',
     name: 'Upper Body & Posture Definition',
-    group: 'Athena Starter Plans',
+    group: 'Aurelia Starter Plans',
     color: '#8FA377',
     exerciseIds: ['lat-pulldown', 'dumbbell-shoulder-press', 'cable-face-pull', 'dumbbell-incline-press'].filter((id) =>
       allBuiltinExercises.some((e) => e.id === id)
@@ -137,7 +137,7 @@ const defaultRoutines: Routine[] = [
   {
     id: 'routine-core-waist',
     name: 'Core, Pelvic Floor & Stability Flow',
-    group: 'Athena Starter Plans',
+    group: 'Aurelia Starter Plans',
     color: '#7FA8C9',
     exerciseIds: ['plank', 'deadbug', 'hanging-knee-raise', 'cable-woodchopper'].filter((id) =>
       allBuiltinExercises.some((e) => e.id === id)
@@ -171,12 +171,12 @@ const defaultState: GymState = {
   ],
   profile: {
     name: 'Sophia',
-    bio: 'Empress & Athena Discipline · Toned Strength & Poise',
+    bio: 'Empress & Aurelia Discipline · Toned Strength & Poise',
     heightCm: 168,
     targetWeightKg: 62,
     gender: 'female',
     activityLevel: 'athlete',
-    callsign: 'Athena',
+    callsign: 'Aurelia',
   },
   settings: {
     theme: 'dark',
@@ -185,14 +185,14 @@ const defaultState: GymState = {
     defaultRestSec: 90,
     heatTone: 'rose',
     language: 'en',
-    coachPersonality: 'athena',
+    coachPersonality: 'aurelia',
     activeProfileId: 'athlete-female',
     onboardingCompleted: false,
     gender: 'female',
   },
   unlockedAwards: [],
   latestAwardUnlocked: null,
-  coachPersonality: 'athena',
+  coachPersonality: 'aurelia',
   activeProfileId: 'athlete-female',
   athleteAccounts: defaultAthleteAccounts,
   onboardingDone: false,
@@ -200,14 +200,14 @@ const defaultState: GymState = {
   onboardingAnswers: {
     gender: 'female',
     name: 'Sophia',
-    callsign: 'Athena',
+    callsign: 'Aurelia',
     focus: 'glute_waist',
     experience: 'intermediate',
     equipment: 'full_gym',
-    personality: 'athena',
+    personality: 'aurelia',
     fasting: '16_8',
   },
-  currentQuote: getRandomQuote('athena'),
+  currentQuote: getRandomQuote('aurelia'),
   scheduledEvents: generateDefaultSchedule(14),
   meals: [],
   nutritionTargets: {
@@ -1025,8 +1025,8 @@ export function useGymStore() {
       callsign: acc.callsign,
       gender: acc.gender || 'female',
       bio:
-        acc.personality === 'athena'
-          ? 'Empress & Athena Discipline · Toned Strength & Poise'
+        acc.personality === 'aurelia'
+          ? 'Empress & Aurelia Discipline · Toned Strength & Poise'
           : acc.personality === 'marine'
           ? 'USMC Veteran · Semper Fidelis · Lift. Log it. Grow.'
           : 'Stoic Practitioner · Master of Self · Lift. Log it. Grow.',
@@ -1070,10 +1070,10 @@ export function useGymStore() {
 
     if (answers.gender === 'female') {
       globalState.settings.heatTone = 'rose';
-      globalState.profile.bio = 'Empress & Athena Discipline · Toned Strength & Poise';
-      globalState.coachPersonality = 'athena';
-      globalState.settings.coachPersonality = 'athena';
-      globalState.currentQuote = getRandomQuote('athena');
+      globalState.profile.bio = 'Empress & Aurelia Discipline · Toned Strength & Poise';
+      globalState.coachPersonality = 'aurelia';
+      globalState.settings.coachPersonality = 'aurelia';
+      globalState.currentQuote = getRandomQuote('aurelia');
 
       globalState.nutritionTargets = {
         calories: 1850,
@@ -1090,7 +1090,7 @@ export function useGymStore() {
         {
           id: 'routine-glute-sculpt',
           name: 'Glute & Posterior Chain Sculpt',
-          group: 'Athena Protocols',
+          group: 'Aurelia Protocols',
           color: '#E0A899',
           exerciseIds: ['barbell-hip-thrust', 'romanian-deadlift', 'bulgarian-split-squat', 'cable-glute-kickback'].filter((id) =>
             allBuiltinExercises.some((e) => e.id === id)
@@ -1099,7 +1099,7 @@ export function useGymStore() {
         {
           id: 'routine-upper-posture',
           name: 'Upper Body & Posture Definition',
-          group: 'Athena Protocols',
+          group: 'Aurelia Protocols',
           color: '#8FA377',
           exerciseIds: ['lat-pulldown', 'dumbbell-shoulder-press', 'cable-face-pull', 'dumbbell-incline-press'].filter((id) =>
             allBuiltinExercises.some((e) => e.id === id)
@@ -1108,7 +1108,7 @@ export function useGymStore() {
         {
           id: 'routine-core-waist',
           name: 'Core, Pelvic Floor & Stability Flow',
-          group: 'Athena Protocols',
+          group: 'Aurelia Protocols',
           color: '#7FA8C9',
           exerciseIds: ['plank', 'deadbug', 'hanging-knee-raise', 'cable-woodchopper'].filter((id) =>
             allBuiltinExercises.some((e) => e.id === id)

@@ -60,7 +60,7 @@ export const DesktopTopBar: React.FC = () => {
       <Shield className="w-3.5 h-3.5 text-red-400" />
     ) : coachPersonality === 'stoic' ? (
       <Compass className="w-3.5 h-3.5 text-[#D9A184]" />
-    ) : coachPersonality === 'athena' ? (
+    ) : coachPersonality === 'aurelia' ? (
       <Sparkles className="w-3.5 h-3.5 text-[#E0A899]" />
     ) : (
       <Sparkles className="w-3.5 h-3.5 text-emerald-400" />

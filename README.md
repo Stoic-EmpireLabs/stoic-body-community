@@ -15,7 +15,7 @@
 
 <br/>
 
-**[Download Clean Release](https://github.com/Stoic-EmpireLabs/stoic-body-community/releases)** · **[Quickstart Desktop](#quickstart-desktop)** · **[Features](#key-features)** · **[Athena & Spartan Archetypes](#female--male-athletic-archetypes)**
+**[Download Clean Release](https://github.com/Stoic-EmpireLabs/stoic-body-community/releases)** · **[Quickstart Desktop](#quickstart-desktop)** · **[Features](#key-features)** · **[Aurelia & Spartan Archetypes](#female--male-athletic-archetypes)**
 
 </div>
 
@@ -39,7 +39,7 @@ Unlike bloated subscription apps with mandatory cloud tracking, Stoic Body runs 
 
 On first launch, you are welcomed by an interactive **Athlete Setup Wizard** that personalizes the entire interface:
 
-| Dimension | ♀️ Empress Athena Mode (Female) | ♂️ Spartan / USMC Mode (Male) |
+| Dimension | ♀️ Empress Aurelia Mode (Female) | ♂️ Spartan / USMC Mode (Male) |
 | :--- | :--- | :--- |
 | **Exercise Library** | **All 552 exercises** render high-definition **female athletic vector figures** (toned silhouette, athletic posture, feminine curves, rose accents). | Classic athletic wireframe and male athletic figures. |
 | **Visual Palette** | Rose gold (`#E0A899`) and deep obsidian glassmorphism. | Tactical amber gold (`#D9A184`) and stealth carbon. |
@@ -57,7 +57,7 @@ Built so partners, spouses, or roommates can use the same desktop app without cr
 
 - **1-Click Profile Switcher**: Switch instantly between profiles from the top navigation bar.
 - **Complete Storage Partitioning**: Each athlete profile maintains its own isolated training history, personal records (PRs), meal logs, body measurements, and custom routines.
-- **Preconfigured Profiles**: Ships with `Sophia (Athena)` and `Marcus (Spartan)` starter profiles, or create unlimited custom profiles.
+- **Preconfigured Profiles**: Ships with `Sophia (Aurelia)` and `Marcus (Spartan)` starter profiles, or create unlimited custom profiles.
 
 ---
 

@@ -103,7 +103,7 @@ export interface GymNote {
   date: string;
 }
 
-export type CoachPersonality = 'marine' | 'stoic' | 'coach' | 'athena';
+export type CoachPersonality = 'marine' | 'stoic' | 'coach' | 'aurelia';
 
 export interface OnboardingAnswers {
   gender: 'male' | 'female';

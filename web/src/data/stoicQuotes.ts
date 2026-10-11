@@ -3,7 +3,7 @@ export interface StoicQuote {
   text: string;
   author: string;
   source?: string;
-  personality: 'marine' | 'stoic' | 'coach' | 'athena';
+  personality: 'marine' | 'stoic' | 'coach' | 'aurelia';
 }
 
 export const STOIC_QUOTES: StoicQuote[] = [
@@ -156,77 +156,77 @@ export const STOIC_QUOTES: StoicQuote[] = [
   },
 
   // -------------------------------------------------------------
-  // ATHENA & EMPRESS (Female Leadership, Sovereignty & Discipline)
+  // AURELIA & EMPRESS (Female Leadership, Sovereignty & Discipline)
   // -------------------------------------------------------------
   {
-    id: 'athena-1',
+    id: 'aurelia-1',
     text: 'Reserve your right to think, for even to think wrongly is better than not to think at all.',
     author: 'Hypatia of Alexandria',
     source: 'Hellenistic Philosophy',
-    personality: 'athena',
+    personality: 'aurelia',
   },
   {
-    id: 'athena-2',
+    id: 'aurelia-2',
     text: 'I will not be triumphed over. Sovereignty is forged in iron discipline and calm resolve.',
     author: 'Cleopatra VII Philopator',
     source: 'Alexandrian Records',
-    personality: 'athena',
+    personality: 'aurelia',
   },
   {
-    id: 'athena-3',
+    id: 'aurelia-3',
     text: 'Courage is not the absence of fear, but the mastery of it. Stand tall when others falter.',
     author: 'Artemisia of Caria',
     source: 'Naval Commander, 480 BC',
-    personality: 'athena',
+    personality: 'aurelia',
   },
   {
-    id: 'athena-4',
+    id: 'aurelia-4',
     text: 'Let us strive for what is ours with unrelenting will. The body endures what the mind commands.',
     author: 'Boudicca',
     source: 'Warrior Queen of the Iceni',
-    personality: 'athena',
+    personality: 'aurelia',
   },
   {
-    id: 'athena-5',
+    id: 'aurelia-5',
     text: 'The triumph can’t be had without the struggle. I run not just to finish, but to set the standard.',
     author: 'Wilma Rudolph',
     source: 'Olympic Gold Champion',
-    personality: 'athena',
+    personality: 'aurelia',
   },
   {
-    id: 'athena-6',
+    id: 'aurelia-6',
     text: 'Only disciplined women rule their own destiny and refuse to ask permission for greatness.',
     author: 'Queen Gorgo of Sparta',
     source: 'Spartan Axioms',
-    personality: 'athena',
+    personality: 'aurelia',
   },
   {
-    id: 'athena-7',
+    id: 'aurelia-7',
     text: 'You gain strength, courage, and confidence by every experience in which you really stop to look fear in the face.',
     author: 'Eleanor Roosevelt',
     source: 'Leadership Discourses',
-    personality: 'athena',
+    personality: 'aurelia',
   },
   {
-    id: 'athena-8',
+    id: 'aurelia-8',
     text: 'Acknowledge the fear, but execute the maneuver anyway. Standards never bend.',
     author: 'Capt. Vernice Armour',
     source: 'USMC Combat Aviator',
-    personality: 'athena',
+    personality: 'aurelia',
   },
   {
-    id: 'athena-9',
+    id: 'aurelia-9',
     text: 'I am not afraid of storms, for I am learning how to sail my ship.',
     author: 'Louisa May Alcott',
     source: 'Literary Works',
-    personality: 'athena',
+    personality: 'aurelia',
   },
   {
-    id: 'athena-10',
+    id: 'aurelia-10',
     text: 'Champions aren’t made in gyms. Champions are made from something they have deep inside them: a desire, a dream, a vision.',
     author: 'Billie Jean King',
     source: 'Athletic Excellence',
-    personality: 'athena',
+    personality: 'aurelia',
   },
 
   // -------------------------------------------------------------
@@ -269,7 +269,7 @@ export const STOIC_QUOTES: StoicQuote[] = [
   },
 ];
 
-export function getRandomQuote(personality?: 'marine' | 'stoic' | 'coach' | 'athena'): StoicQuote {
+export function getRandomQuote(personality?: 'marine' | 'stoic' | 'coach' | 'aurelia'): StoicQuote {
   const pool = personality
     ? STOIC_QUOTES.filter((q) => q.personality === personality)
     : STOIC_QUOTES;

@@ -24,12 +24,12 @@ export const OnboardingModal: React.FC = () => {
   const [answers, setAnswers] = useState<OnboardingAnswers>({
     gender: 'female',
     name: 'Sophia',
-    callsign: 'Athena',
+    callsign: 'Aurelia',
     focus: 'glute_waist',
     experience: 'intermediate',
     equipment: 'full_gym',
     fasting: '16_8',
-    personality: 'athena',
+    personality: 'aurelia',
   });
 
   if (!showOnboarding) return null;
@@ -41,9 +41,9 @@ export const OnboardingModal: React.FC = () => {
       ...answers,
       gender,
       name: gender === 'female' ? 'Sophia' : 'Marcus',
-      callsign: gender === 'female' ? 'Athena' : 'Spartan',
+      callsign: gender === 'female' ? 'Aurelia' : 'Spartan',
       focus: gender === 'female' ? 'glute_waist' : 'combat',
-      personality: gender === 'female' ? 'athena' : 'marine',
+      personality: gender === 'female' ? 'aurelia' : 'marine',
       fasting: gender === 'female' ? '16_8' : 'omad',
     });
   };
@@ -135,7 +135,7 @@ export const OnboardingModal: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <span className="font-black text-base text-white">Female / Empress</span>
                       <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-[#E0A899]/20 text-[#E0A899]">
-                        Athena
+                        Aurelia
                       </span>
                     </div>
                     <p className="text-xs text-neutral-400 mt-1.5 leading-relaxed">
@@ -210,7 +210,7 @@ export const OnboardingModal: React.FC = () => {
                     type="text"
                     value={answers.callsign || ''}
                     onChange={(e) => setAnswers({ ...answers, callsign: e.target.value })}
-                    placeholder={isFemale ? 'e.g. Athena' : 'e.g. Spartan'}
+                    placeholder={isFemale ? 'e.g. Aurelia' : 'e.g. Spartan'}
                     className="w-full bg-[#100F10] border border-[#2B2428] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#E0A899]"
                   />
                 </div>

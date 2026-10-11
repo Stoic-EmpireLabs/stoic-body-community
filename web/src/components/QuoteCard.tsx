@@ -7,12 +7,12 @@ export const QuoteCard: React.FC = () => {
   const { currentQuote, coachPersonality, setCoachPersonality, shuffleQuote, profile, settings } = useGymStore();
 
   const isFemale = profile?.gender === 'female' || settings?.gender === 'female';
-  const defaultPersonality = isFemale ? 'athena' : 'marine';
+  const defaultPersonality = isFemale ? 'aurelia' : 'marine';
 
   const personalityLabels: Record<CoachPersonality, { name: string; tag: string; icon: React.ReactNode; color: string }> = {
-    athena: {
-      name: 'Athena & Empress Wisdom',
-      tag: 'ATHENA · SOVEREIGNTY & POISE',
+    aurelia: {
+      name: 'Aurelia & Empress Wisdom',
+      tag: 'AURELIA · SOVEREIGNTY & POISE',
       icon: <Crown className="w-3.5 h-3.5 text-[#E0A899]" />,
       color: 'bg-rose-950/40 text-[#E0A899] border-[#E0A899]/40',
     },
@@ -65,9 +65,9 @@ export const QuoteCard: React.FC = () => {
         <div className="flex items-center gap-2">
           {/* Personality Quick Selectors */}
           <div className="flex bg-[#100E10] p-1 rounded-xl border border-[#242024]">
-            {(['athena', 'stoic', 'marine', 'coach'] as CoachPersonality[]).map((p) => {
+            {(['aurelia', 'stoic', 'marine', 'coach'] as CoachPersonality[]).map((p) => {
               const active = coachPersonality === p;
-              const titles = { athena: 'Athena', stoic: 'Stoic', marine: 'USMC', coach: 'Coach' };
+              const titles = { aurelia: 'Aurelia', stoic: 'Stoic', marine: 'USMC', coach: 'Coach' };
               return (
                 <button
                   key={p}
