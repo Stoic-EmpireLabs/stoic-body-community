@@ -70,11 +70,11 @@ export const ExerciseDetailModal: React.FC = () => {
       <div className="bg-[#181818] border border-[#2B2B2B] rounded-3xl p-4 shadow-xl flex flex-col items-center">
         <div className="w-full h-56 rounded-2xl overflow-hidden bg-[#121212] mb-3">
           <ExerciseArt
-            slug={exercise.art}
-            height={224}
-            loop={true}
+            slug={exercise.art || exercise.id}
             exerciseName={exercise.name}
             primaryMuscle={exercise.primary}
+            height={224}
+            loop={true}
           />
         </div>
 
